@@ -5,8 +5,10 @@ import toast from 'react-hot-toast';
 import { completeOnboarding } from '../lib/api';
 import { MapPinIcon, ShipWheelIcon, ShuffleIcon, LoaderIcon } from 'lucide-react';
 import { LANGUAGES } from '../constants';
+import { useNavigate } from 'react-router';
 
 const OnboardingPage = () => {
+  const navigate = useNavigate();
   const { authUser } = useAuthUser();
   const queryClient = useQueryClient();
 
@@ -37,12 +39,14 @@ const OnboardingPage = () => {
   };
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1;
-    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
+  const randomSeed = Math.random().toString(36).substring(2); // generate a random string
+  const randomAvatar = `https://api.dicebear.com/7.x/adventurer/png?seed=${randomSeed}`;
 
-    setFormState({...formState, profilePic: randomAvatar});
-    toast.success("Random Avatar generated!");
-  };
+  setFormState({ ...formState, profilePic: randomAvatar });
+  toast.success("Random Avatar generated!");
+};
+
+
 
   return (
     <div className='min-h-screen bg-base-100 flex items-center justify-center p-4'>
@@ -169,7 +173,7 @@ const OnboardingPage = () => {
               </div>
 
               {/* submit button */}
-              <button className='btn btn-primary w-full' disabled={isPending} type='submit'>
+              <button className='btn btn-primary w-full' disabled={isPending} type='submit' onClick={() => navigate("/")}>
                 {!isPending ? (
                   <>
                    <ShipWheelIcon className='size-5 mr-2'/>
